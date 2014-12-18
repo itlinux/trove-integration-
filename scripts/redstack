@@ -78,7 +78,7 @@ fi
 # Utility functions
 ###############################################################################
 
-APT_GET_ARGS="-y --allow-unauthenticated --force-yes"
+APT_GET_ARGS="-y"
 
 function exclaim () {
     echo "*******************************************************************************"
@@ -88,12 +88,12 @@ function exclaim () {
 
 function pkg_install () {
     echo Installing $@...
-    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY apt-get $APT_GET_ARGS install $@
+    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY yum $APT_GET_ARGS install $@
 }
 
 function pkg_update () {
     echo Updating $@...
-    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY apt-get $APT_GET_ARGS update $@
+    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY yum $APT_GET_ARGS update $@
 }
 
 function set_home_dir() {
@@ -470,8 +470,8 @@ function cmd_build_image() {
     GUEST_USERNAME=${4:-'ubuntu'}
 
     exclaim "Ensuring we have all packages needed to build image."
-    sudo $HTTP_PROXY apt-get -y update
-    sudo $HTTP_PROXY apt-get -y install qemu
+    sudo $HTTP_PROXY yum -y update
+    sudo $HTTP_PROXY yum -y install qemu
     sudo $HTTP_PROXY pip install --upgrade pip dib-utils
     cmd_clone_projects do_not_force_update $REDSTACK_SCRIPTS/image-projects-list
 

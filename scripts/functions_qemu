@@ -16,16 +16,20 @@ function build_vm() {
     SERVICE_TYPE=$5
 
     readonly SSH_DIR=${KEY_DIR:-${HOMEDIR}/.ssh}
-    manage_ssh_keys
 
     if [ $DISTRO == 'ubuntu' ]; then
         export RELEASE=precise
         export DIB_RELEASE=$RELEASE
         export DIB_CLOUD_IMAGES=cloud-images.ubuntu.com
+        export PKG_MANAGER=apt-get
     fi
     if [ $DISTRO == 'fedora' ]; then
         EXTRA_ELEMENTS=selinux-permissive
+        export PKG_MANAGER=yum
     fi
+
+    manage_ssh_keys
+
     export HOST_USERNAME
     export HOST_SCP_USERNAME
     export GUEST_USERNAME
@@ -98,7 +102,7 @@ function manage_ssh_keys() {
     fi
 
     if [ ! -f ${SSH_DIR}/id_rsa.pub ]; then
-        sudo apt-get -y install expect
+        sudo ${PKG_MANAGER} -y install expect
         generate_empty_passphrase_ssh_key ${HOST_USERNAME}
     fi
 
