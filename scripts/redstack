@@ -78,7 +78,8 @@ fi
 # Utility functions
 ###############################################################################
 
-APT_GET_ARGS="-y --allow-unauthenticated --force-yes"
+PKG_MANAGER_ARGS="-y"
+PKG_MANAGER=yum
 
 function exclaim () {
     echo "*******************************************************************************"
@@ -88,12 +89,12 @@ function exclaim () {
 
 function pkg_install () {
     echo Installing $@...
-    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY apt-get $APT_GET_ARGS install $@
+    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY ${PKG_MANAGER} ${PKG_MANAGER_ARGS} install $@
 }
 
 function pkg_update () {
     echo Updating $@...
-    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY apt-get $APT_GET_ARGS update $@
+    sudo -E DEBIAN_FRONTEND=noninteractive $HTTP_PROXY ${PKG_MANAGER} ${PKG_MANAGER_ARGS} update $@
 }
 
 function set_home_dir() {
@@ -466,12 +467,13 @@ function cmd_test_init() {
 function cmd_build_image() {
     IMAGE_DATASTORE_TYPE=${1:-'mysql'}
     ESCAPED_PATH_TROVE=${2:-'\/opt\/stack\/trove'}
-    HOST_SCP_USERNAME=${3:-'ubuntu'}
-    GUEST_USERNAME=${4:-'ubuntu'}
+    HOST_SCP_USERNAME=${3:-'vkmc'}
+    GUEST_USERNAME=${4:-'vkmc'}
+    PKG_MANAGER=yum
 
     exclaim "Ensuring we have all packages needed to build image."
-    sudo $HTTP_PROXY apt-get -y update
-    sudo $HTTP_PROXY apt-get -y install qemu
+    sudo $HTTP_PROXY ${PKG_MANAGER} -y update
+    sudo $HTTP_PROXY ${PKG_MANAGER} -y install qemu
     sudo $HTTP_PROXY pip install --upgrade pip dib-utils
     cmd_clone_projects do_not_force_update $REDSTACK_SCRIPTS/image-projects-list
 
@@ -786,12 +788,12 @@ function cmd_kick_start() {
 function cmd_dsvm_gate_tests() {
     DATASTORE_TYPE=${1:-'mysql'}
     HOST_SCP_USERNAME=${2:-'jenkins'}
-    GUEST_USERNAME=${3:-'ubuntu'}
+    GUEST_USERNAME=${3:-'vkmc'}
     NETWORK_GATEWAY=${4:-'10.1.0.1'}
     ESCAPED_PATH_TROVE=${5:-'\/opt\/stack\/new\/trove'}
 
     # Devstack vm-gate runs as the jenkins user, but needs to connect to the guest image as ubuntu
-    echo "User=ubuntu" >> /home/jenkins/.ssh/config
+    echo "User=vkmc" >> /home/jenkins/.ssh/config
 
     # Fix iptables rules that prevent amqp connections from the devstack box to the guests
     sudo iptables -D openstack-INPUT -j REJECT --reject-with icmp-host-prohibited || true
