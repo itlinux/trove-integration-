@@ -11,7 +11,7 @@ yum install -y python-devel libxml2-devel libxslt-devel python-setuptools python
     python-httplib2 python-iso8601 python-pexpect MySQL-python python-migrate python-pip python-anyjson gcc
 
 
-pip-python install extras python-novaclient python-swiftclient python-cinderclient \
-    kombu>2.4.7 six babel python-heatclient passlib jinja2  python-neutronclient netifaces \
-    oslo.config>=1.2.0 oslo.messaging>=1.4.0 oslo.i18n>=1.0.0 oslo.serialization>=1.0.0 oslo.utils>=1.0.0 \
-    osprofiler>=0.3.0
+yum install -y python-extras python-novaclient python-swiftclient python-cinderclient \
+    python-kombu python-six python-babel python-heatclient python-passlib python-jinja2 python-neutronclient \
+    python-netifaces python-oslo-config python-oslo-messaging python-oslo-i18n python-oslo-serialization \
+    python-oslo-utils python-osprofiler

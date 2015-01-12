@@ -467,8 +467,8 @@ function cmd_test_init() {
 function cmd_build_image() {
     IMAGE_DATASTORE_TYPE=${1:-'mysql'}
     ESCAPED_PATH_TROVE=${2:-'\/opt\/stack\/trove'}
-    HOST_SCP_USERNAME=${3:-'vkmc'}
-    GUEST_USERNAME=${4:-'vkmc'}
+    HOST_SCP_USERNAME=${3:-'ubuntu'}
+    GUEST_USERNAME=${4:-'ubuntu'}
     PKG_MANAGER=yum
 
     exclaim "Ensuring we have all packages needed to build image."
@@ -788,12 +788,12 @@ function cmd_kick_start() {
 function cmd_dsvm_gate_tests() {
     DATASTORE_TYPE=${1:-'mysql'}
     HOST_SCP_USERNAME=${2:-'jenkins'}
-    GUEST_USERNAME=${3:-'vkmc'}
+    GUEST_USERNAME=${3:-'ubuntu'}
     NETWORK_GATEWAY=${4:-'10.1.0.1'}
     ESCAPED_PATH_TROVE=${5:-'\/opt\/stack\/new\/trove'}
 
     # Devstack vm-gate runs as the jenkins user, but needs to connect to the guest image as ubuntu
-    echo "User=vkmc" >> /home/jenkins/.ssh/config
+    echo "User=ubuntu" >> /home/jenkins/.ssh/config
 
     # Fix iptables rules that prevent amqp connections from the devstack box to the guests
     sudo iptables -D openstack-INPUT -j REJECT --reject-with icmp-host-prohibited || true
